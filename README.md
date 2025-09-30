@@ -1,0 +1,1 @@
+# jogo-magali
