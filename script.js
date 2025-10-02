@@ -2,31 +2,34 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 let jogador = {
-x: 0,
-y: 0,
-largura: 50,
-altura: 50,
-velocidadeX: 0,
-velocidadeY: 0,
-gravidade: 0.3,
-forcaDoPulo: 12,
-pulando: false
+    x: 0,
+    y: 0,
+    largura: 250,
+    altura: 250,
+    velocidadeX: 0,
+    velocidadeY: 0,
+    gravidade: 0.3,
+    forcaDoPulo: 12,
+    pulando: false
 };
 
 let alvo = {
-x: 0,
-y: 0,
-largura: 50,
-altura: 50,
-velocidadeX: 0,
-velocidadeY: 0,
-pulando: false
+    x: 0,
+    y: 0,
+    largura: 100,
+    altura: 80,
+    velocidadeX: 0,
+    velocidadeY: 0,
+    pulando: false
 };
 
 let imagemFundo = new Image();
 imagemFundo.src = 'rua.jpg';
 
+
+const imagemJogador = new Image();
 imagemJogador.src = 'magali.png'; 
+
 const imagemAlvo = new Image();
 imagemAlvo.src = 'melancia.png';
 
@@ -44,20 +47,20 @@ function limitarMovimento(obj){
     if (obj.x < 0) obj.x = 0;
     if (obj.x + obj.largura > canvas.width) obj.x = canvas.width - obj.largura; 
     if (obj.y < 0) obj.y = 0;
-    if (obj.y + obj.altura > canvas.height) obj.y = canvas.height - obj.height;
+    if (obj.y + obj.altura > canvas.height) obj.y = canvas.height - obj.altura;
 }
 
 function pular() {
     if (!jogador.pulando) {
-    jogador.velocidadeY = -jogador. forcaDoPulo;
-    jogador.pulando = true;
+        jogador.velocidadeY = -jogador.forcaDoPulo;
+        jogador.pulando = true;
     }
 }
 
-function atulizarPuloJogador(){
+function atualizarPuloJogador(){
     if (jogador.pulando) {
-        jogador.velocidadeY + jogador.gravidade; 
-        jogador.y + jogador.velocidadeY;
+        jogador.velocidadeY += jogador.gravidade; 
+        jogador.y += jogador.velocidadeY;  
         if (jogador.y + jogador.altura > canvas.height) { 
             jogador.y = canvas.height - jogador.altura;
             jogador.pulando = false;
@@ -70,7 +73,7 @@ function atualizarFisicaAlvo(){
     if (alvo.pulando) {
         alvo.velocidadeY += jogador.gravidade; 
         alvo.x += alvo.velocidadeX;
-        alvo.y + alvo.velocidadeY;
+        alvo.y += alvo.velocidadeY;  
 
         if (alvo.y + alvo.altura >= canvas.height) {
             alvo.y = canvas.height - alvo.altura;
@@ -89,7 +92,7 @@ function chutar() {
     let distancia = Math.sqrt(distX ** 2 + distY ** 2);
 
     if (distancia < 150) {
-        alvo.velocidadex = distX > 0 ? 20: -20;
+        alvo.velocidadeX = distX > 0 ? 20 : -20;  
         alvo.velocidadeY = -20;
         alvo.pulando = true;
     }
@@ -100,16 +103,16 @@ function desenhar() {
 
     ctx.drawImage(imagemFundo, 0, 0, canvas.width, canvas.height);
 
-    ctx.drawImage (imagemJogador, jogador.x, jogador.y, jogador.largura, jogador.altura)
+    ctx.drawImage(imagemJogador, jogador.x, jogador.y, jogador.largura, jogador.altura)
 
-    ctx.drawImage (imagemAlvo, alvo.x, alvo.y, alvo. largura, alvo.altura);
+    ctx.drawImage(imagemAlvo, alvo.x, alvo.y, alvo.largura, alvo.altura);
 }
 
 
 function jogo() {
     if (teclas['ArrowLeft']) jogador.x -= 3;
     if (teclas['ArrowRight']) jogador.x += 3;
-    if (teclas['Arrowup']) jogador.y -= 3;
+    if (teclas['ArrowUp']) jogador.y -= 3;
     if (teclas['ArrowDown']) jogador.y += 3;
 
     if (teclas[' '] && !jogador.pulando) pular();
@@ -124,19 +127,13 @@ function jogo() {
     desenhar();
     
     requestAnimationFrame(jogo); 
-
-    let teclas = {};
-    window. addEventListener('keydown', (e) => teclas[e.key] = true);
-    window.addEventListener('keyup', (e) => teclas[e.key] = false);
-
-    requestAnimationFrame(jogo); 
 }
 
 let teclas = {};
-vindow.addEventListener('keydown', (e) => teclas[e.key] = true);
-vindow.addEventListener('keyup', (e) => teclas[e.key] = false);
+window.addEventListener('keydown', (e) => teclas[e.key] = true);
+window.addEventListener('keyup', (e) => teclas[e.key] = false);
 
-let imagensCarregadas = O;
+let imagensCarregadas = 0;  
 const totalImagens = 3; 
 
 function verificarImagensCarregadas() {
@@ -146,6 +143,6 @@ function verificarImagensCarregadas() {
     }
 }
 
-imagemJogador .onload = verificarImagensCarregadas;
+imagemJogador.onload = verificarImagensCarregadas;
 imagemAlvo.onload = verificarImagensCarregadas;
-imagemFundo .onload = verificarImagensCarregadas;
+imagemFundo.onload = verificarImagensCarregadas;
